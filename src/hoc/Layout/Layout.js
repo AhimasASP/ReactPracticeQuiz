@@ -29,9 +29,7 @@ class Layout extends Component {
                 onClose = {this.menuCloseHandler}/>
             <MenuToggle
                 onToggle = {this.toggleMenuHandler}
-                isOpen = {this.state.menu}
-            />
-
+                isOpen = {this.state.menu}/>
               <main>
                   {this.props.children}
               </main>

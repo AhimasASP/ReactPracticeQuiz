@@ -61,7 +61,6 @@ onAnswerClickHandler = answerId => {
                 this.setState({
                     isFinished: true
                 })
-                console.log('Finished')
             } else {
                 this.setState({
                     activeQuestion: this.state.activeQuestion + 1,
@@ -84,6 +83,10 @@ onAnswerClickHandler = answerId => {
 
 isQuizFinished() {
         return this.state.activeQuestion + 1 === this.state.quiz.length
+    }
+
+    componentDidMount() {
+    console.log('Quiz ID = ', this.props.match.params.id)
     }
 
     retryHandler = () => {
