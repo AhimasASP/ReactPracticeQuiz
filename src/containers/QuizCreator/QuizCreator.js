@@ -1,11 +1,12 @@
 import React, {Component} from "react";
+import axios from '../../axios/axios-quiz'
 import classes from './QuizCreator.css'
 import Button from "../../components/UI/Button/Button";
 import {createControl} from '../../form/FormFramework'
 import {validate} from '../../form/FormFramework'
 import {validateForm} from '../../form/FormFramework'
 import Input from "../../components/UI/Input/Input";
-import {Auxiliary} from '../../hoc/Auxiliary/Auxiliary'
+import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
 import Select from "../../components/UI/Select/Select";
 
 function createOptionControl(number) {
@@ -43,9 +44,49 @@ export default class QuizCreator extends Component{
 
     addQuestionHandler = event => {
         event.preventDefault()
+        const quiz = this.state.quiz.concat()
+        const index = quiz.length + 1
+
+        const {question, option1, option2, option3, option4} = this.state.formControls
+
+        const questionItem = {
+            question: question.value,
+            id: index,
+            rightAnswerId: this.state.rightAnswerId,
+            answers: [
+                {text: option1.value, id: option1.id},
+                {text: option2.value, id: option2.id},
+                {text: option3.value, id: option3.id},
+                {text: option4.value, id: option4.id}
+            ]
+        }
+
+        quiz.push(questionItem)
+        this.setState({
+            quiz,
+            isFormValid: false,
+            rightAnswerId: 1,
+            formControls: createFormControls()
+        })
+
     }
 
-    createQuizHandler = () => {
+    createQuizHandler = async event => {
+        event.preventDefault()
+
+        try {
+            await axios.post('quizes.json',
+                this.state.quiz)
+            this.setState({
+                quiz: [],
+                isFormValid: false,
+                rightAnswerId: 1,
+                formControls: createFormControls()
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
 
     }
 
@@ -70,7 +111,7 @@ export default class QuizCreator extends Component{
             const control = this.state.formControls[controlName]
 
             return(
-                <Auxiliary key = {control.value + index}>
+                <Auxiliary key = {control.id + index}>
                 <Input
                     label = {control.label}
                     value = {control.value}
